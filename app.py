@@ -418,6 +418,7 @@ def translate_text():
 # ---------- MAIN ----------
 if __name__ == '__main__':
     print("🚀 Server running at http://127.0.0.1:5000")
+    print("📱 On your phone (same WiFi), open: http://192.168.43.173:5000")
     print("📂 View Database Data at http://127.0.0.1:5000/admin/data")
     print(app.url_map) # show registered routes
     # Only open browser in the FIRST process, not in the Flask reloader subprocess
@@ -426,5 +427,5 @@ if __name__ == '__main__':
             webbrowser.open("http://127.0.0.1:5000")
         except Exception:
             pass
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 # End of file
