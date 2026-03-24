@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Data View</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7f6;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #0078d7;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .empty {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0078d7;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📂 Database Content Viewer</h1>
+
+    <div class="section">
+        <h2>👤 Registered Users</h2>
+        {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user['id'] }}</td>
+                    <td>{{ user['username'] }}</td>
+                    <td>{{ user['email'] }}</td>
+                    <td><code style="background:#eee;padding:2px 5px;border-radius:4px;">{{ user['password'] }}</code>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No users found in the database.</div>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>🚨 SOS Emergency Alerts</h2>
+        {% if sos_alerts %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Location Link</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in sos_alerts %}
+                <tr>
+                    <td>{{ alert['timestamp'] }}</td>
+                    <td><b>{{ alert['username'] }}</b></td>
+                    <td>
+                        <a href="https://www.google.com/maps?q={{ alert['latitude'] }},{{ alert['longitude'] }}"
+                            target="_blank" style="color:#ff0000;text-decoration:none;">📍 View on Maps</a>
+                    </td>
+                    <td style="font-size: 0.9em; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                        title="{{ alert['address'] }}">
+                        {{ alert['address'] }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No emergency alerts recorded.</div>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="back-link">⬅ Back to Dashboard</a>
+
+</body>
+
+</html>

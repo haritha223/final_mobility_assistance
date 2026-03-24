@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Mobility Assistance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, rgba(30, 11, 53, 0.4) 0%, rgba(61, 20, 95, 0.5) 100%), url('{{ url_for("static", filename="wheelchair-bg.png") }}') center center / cover no-repeat fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e2d2ff;
+    }
+
+    .dashboard-container {
+      background: rgba(43, 10, 85, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      padding: 60px 50px;
+      text-align: center;
+      max-width: 800px;
+      width: 90%;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dashboard-header h2 {
+      margin: 0 0 10px;
+      color: #ffffff;
+      font-size: 38px;
+      font-weight: 700;
+    }
+
+    .dashboard-header p {
+      color: #c4a5f3;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(138, 43, 226, 0.15);
+      color: #ffffff;
+      padding: 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn-action:hover {
+      background: rgba(138, 43, 226, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(138, 43, 226, 0.3);
+      border-color: rgba(138, 43, 226, 0.8);
+    }
+
+    .btn-action span {
+      font-size: 20px;
+    }
+
+    .sos-btn {
+      background: linear-gradient(135deg, #f56565, #e53e3e);
+      color: white !important;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      animation: gentle-pulse 2s infinite;
+      box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
+    }
+
+    .sos-btn:hover {
+      background: linear-gradient(135deg, #fc8181, #f56565);
+      box-shadow: 0 8px 25px rgba(229, 62, 62, 0.6);
+      transform: translateY(-3px);
+    }
+
+    @keyframes gentle-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(229, 62, 62, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
+    }
+
+    .logout-btn {
+      margin-top: 10px;
+      grid-column: 1 / -1;
+      background: transparent;
+      color: #c4a5f3;
+      border: 1px solid rgba(196, 165, 243, 0.4);
+    }
+
+    .logout-btn:hover {
+      background: rgba(196, 165, 243, 0.15);
+      color: #ffffff;
+      border-color: #c4a5f3;
+    }
+
+    /* SOS Modal Styles */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 2, 25, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+
+    .modal-card {
+      background: linear-gradient(135deg, #4a196e 0%, #1e0b35 100%);
+      border: 2px solid rgba(229, 62, 62, 0.6);
+      border-radius: 24px;
+      padding: 40px; text-align: center;
+      max-width: 450px; width: 90%;
+      box-shadow: 0 20px 50px rgba(229, 62, 62, 0.3);
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.active .modal-card { transform: scale(1); }
+
+    .modal-icon { font-size: 60px; animation: gentle-pulse 1s infinite; margin-bottom: 20px; }
+    
+    .modal-title { color: #fc8181; font-size: 32px; margin: 0 0 15px; font-weight: 800; }
+    .modal-desc { color: #e2d2ff; font-size: 18px; margin-bottom: 10px; line-height: 1.4; }
+    .modal-coords { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; color: #b794f4; font-family: monospace; font-size: 14px; margin-bottom: 25px; border: 1px solid rgba(138,43,226,0.3); }
+    
+    .modal-badge { display: inline-block; background: rgba(229, 62, 62, 0.2); color: #fc8181; padding: 10px 20px; border-radius: 30px; font-weight: 700; border: 1px solid rgba(229, 62, 62, 0.4); margin-bottom: 30px; }
+
+    .modal-actions { display: flex; gap: 15px; justify-content: center; }
+    .modal-btn-primary { flex: 1; background: linear-gradient(135deg, #f56565, #e53e3e); color: white; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Outfit', sans-serif; font-size: 16px; }
+    .modal-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(229, 62, 62, 0.6); background: linear-gradient(135deg, #fc8181, #f56565); }
+    
+    .modal-btn-secondary { flex: 1; background: transparent; color: #c4a5f3; border: 2px solid rgba(196, 165, 243, 0.4); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Outfit', sans-serif; font-size: 16px; }
+    .modal-btn-secondary:hover { background: rgba(196, 165, 243, 0.15); color: #fff; }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h2>Welcome 👋</h2>
+      <p>Select a service to proceed</p>
+    </div>
+    
+    <div class="buttons-grid">
+      <a href="{{ url_for('navigation') }}" class="btn-action">
+        <span>🗺️</span> Navigation Maps
+      </a>
+      <a href="{{ url_for('reviews') }}" class="btn-action">
+        <span>💬</span> User Reviews
+      </a>
+      <button class="btn-action sos-btn" onclick="triggerSOS()">
+        <span>🚨</span> SOS Emergency
+      </button>
+      <a href="{{ url_for('logout') }}" class="btn-action logout-btn">
+        Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- Attractive SOS Modal -->
+  <div id="sos-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">🚨</div>
+      <h2 class="modal-title">SOS ALERT SENT!</h2>
+      <p class="modal-desc" id="sos-address">Fetching location...</p>
+      <div class="modal-coords" id="sos-coords">Lat: 0.0000, Lon: 0.0000</div>
+      <div class="modal-badge">🚑 Help is on the way!</div>
+      
+      <div class="modal-actions">
+        <a href="#" id="sos-maps-btn" target="_blank" class="modal-btn-primary">🗺️ Open Map</a>
+        <button onclick="closeSOSModal()" class="modal-btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSOSModal(address, lat, lon) {
+      document.getElementById('sos-address').innerText = address;
+      document.getElementById('sos-coords').innerText = `Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`;
+      document.getElementById('sos-maps-btn').href = `https://www.google.com/maps?q=${lat},${lon}`;
+      document.getElementById('sos-modal').classList.add('active');
+    }
+
+    function closeSOSModal() {
+      document.getElementById('sos-modal').classList.remove('active');
+    }
+
+    function triggerSOS() {
+      const btn = document.querySelector('.sos-btn');
+      const originalText = btn.innerHTML; // Using innerHTML to preserve spans
+      btn.innerHTML = "<span>⏳</span> Alerting...";
+      btn.disabled = true;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            // Reverse Geocoding to get address
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+              .then(response => response.json())
+              .then(data => {
+                const address = data.display_name || "Unknown location";
+                
+                showSOSModal(address, lat, lon);
+
+                // --- Send to Server ---
+                fetch('/api/sos', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ lat, lon, address, username: 'User' })
+                }).then(res => res.json())
+                  .then(data => console.log("SOS logged on server:", data))
+                  .catch(err => console.error("Server logging failed:", err));
+              })
+              .catch((err) => {
+                console.error(err);
+                showSOSModal("GPS secured (Location fetch failed)", lat, lon);
+                // Fallback server log even if geocoding fails
+                fetch('/api/sos', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ lat, lon, address: "Nominatim Failed", username: 'User' })
+                });
+              })
+              .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+              });
+          },
+          (err) => {
+            alert("⚠️ Unable to access location. Please enable GPS for SOS.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }
+        );
+      } else {
+        alert("❌ Geolocation not supported in your browser.");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+
+</html>

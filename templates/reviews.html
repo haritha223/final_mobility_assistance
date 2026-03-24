@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviews</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, rgba(30, 11, 53, 0.4) 0%, rgba(61, 20, 95, 0.5) 100%), url('{{ url_for("static", filename="wheelchair-bg.png") }}') center center / cover no-repeat fixed;
+      color: #e2d2ff;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(43, 10, 85, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .back-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid rgba(196, 165, 243, 0.4);
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .back-btn:hover {
+      background: rgba(138, 43, 226, 0.3);
+      border-color: #c4a5f3;
+    }
+
+    .container {
+      background: rgba(43, 10, 85, 0.5);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 30px auto;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    h2, h3 { color: #ffffff; }
+
+    input, textarea {
+      width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 10px;
+      color: #ffffff; font-family: 'Outfit', sans-serif; box-sizing: border-box; transition: all 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none; border-color: #8a2be2; box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+    button {
+      background: linear-gradient(135deg, #8a2be2 0%, #5d109f 100%); color: white; border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: 'Outfit', sans-serif; transition: all 0.3s;
+    }
+
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6); }
+
+    .review {
+      background: rgba(255, 255, 255, 0.05); border-left: 4px solid #8a2be2; padding: 15px; border-radius: 8px; margin-bottom: 15px; color: #e2d2ff;
+    }
+    
+    .review strong { color: #ffffff; font-size: 1.1em; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:24px;">📝</span>
+      <h2 style="margin:0;color:white;font-size:1.2rem;">User Feedback</h2>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">⬅ Back Home</a>
+  </header>
+
+  <div class="container">
+    <h2>💬 Post a Review</h2>
+    <form method="POST">
+      <input type="text" name="username" placeholder="Your name (optional)" style="width:100%;padding:10px;margin-bottom:10px;">
+      <div style="position:relative;">
+        <textarea id="message-input" name="message" placeholder="Write your review..." required></textarea>
+        <button type="button" id="voice-btn" style="position:absolute;right:10px;bottom:15px;background:transparent;color:#0078d7;padding:5px;font-size:20px;">🎤</button>
+      </div>
+      <div id="voice-status" style="font-size:0.8em;color:#666;margin-top:-5px;margin-bottom:10px;min-height:1.2em;"></div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <h3>📝 Recent Reviews</h3>
+    <div id="reviews-list">
+      {%- if reviews_html -%}
+        {{ reviews_html|safe }}
+      {%- elif reviews -%}
+        {%- for r in reviews -%}
+          <div class="review">
+            <strong>{{ r[0] }}</strong><br>
+            {{ r[1] }}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="review">(No reviews yet)</div>
+      {%- endif -%}
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='voice-processor.js') }}"></script>
+  <script>
+    document.getElementById('search-input').addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase();
+      const reviews = document.querySelectorAll('.review');
+      reviews.forEach(review => {
+        const text = review.innerText.toLowerCase();
+        if (text.includes(term)) {
+          review.style.display = 'block';
+        } else {
+          review.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

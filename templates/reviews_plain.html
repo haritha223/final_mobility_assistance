@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reviews</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, rgba(30, 11, 53, 0.4) 0%, rgba(61, 20, 95, 0.5) 100%), url('{{ url_for("static", filename="wheelchair-bg.png") }}') center center / cover no-repeat fixed;
+      color: #e2d2ff;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(43, 10, 85, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .back-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid rgba(196, 165, 243, 0.4);
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .back-btn:hover {
+      background: rgba(138, 43, 226, 0.3);
+      border-color: #c4a5f3;
+    }
+
+    main {
+      padding: 30px 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(43, 10, 85, 0.5);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      margin-bottom: 30px;
+    }
+
+    h2, h3 {
+      color: #ffffff;
+      margin-top: 0;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #8a2be2;
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .voice-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(138, 43, 226, 0.4);
+      color: #c4a5f3;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+    }
+
+    .voice-btn:hover {
+      background: rgba(138, 43, 226, 0.3);
+      color: #fff;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #8a2be2 0%, #5d109f 100%);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.3s;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    }
+
+    .review {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid #8a2be2;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      color: #e2d2ff;
+    }
+    
+    .review strong {
+      color: #ffffff;
+      font-size: 1.1em;
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:24px;">💬</span>
+      <h2 style="margin:0;">User Feedback</h2>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">⬅ Back</a>
+  </header>
+  
+  <main>
+    <div class="card">
+      <h2>Post a Review</h2>
+      <form method="POST" action="/reviews">
+        <div style="position:relative;margin-bottom:15px;">
+          <input type="text" id="username-input" name="username" placeholder="Your name (optional)">
+          <button type="button" class="voice-btn" id="voice-btn-name" data-target="username-input" title="Voice Input">🎤</button>
+        </div>
+
+        <div style="position:relative;margin-bottom:15px;">
+          <textarea id="message-input" name="message" placeholder="Write your review..." required style="height:120px;"></textarea>
+          <button type="button" class="voice-btn" id="voice-btn-msg" data-target="message-input" title="Voice Input">🎤</button>
+        </div>
+
+        <div id="voice-status" style="font-size:12px;color:#c4a5f3;margin-bottom:15px;min-height:15px;font-style:italic;"></div>
+
+        <button type="submit" class="submit-btn">Submit Review</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <h3 style="margin: 0;">Recent Reviews</h3>
+        <input type="text" id="search-input" placeholder="🔍 Search reviews (e.g. KGISL)..." style="width: 100%; max-width: 300px; padding: 12px; margin: 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(138, 43, 226, 0.5); border-radius: 8px; color: #ffffff;" autocomplete="off">
+      </div>
+      <div id="reviews-list">
+        {{ reviews_html|safe }}
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='voice-processor.js') }}"></script>
+  <script>
+    document.getElementById('search-input').addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase();
+      const reviews = document.querySelectorAll('.review');
+      reviews.forEach(review => {
+        const text = review.innerText.toLowerCase();
+        if (text.includes(term)) {
+          review.style.display = 'block';
+        } else {
+          review.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

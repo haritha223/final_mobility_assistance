@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Zen Sudoku - Premium Mind Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div id="landing-page" class="landing-page active">
+        <div class="landing-content">
+            <div class="logo">
+                <h1>ZEN<span>SUDOKU</span></h1>
+            </div>
+            <p>Master the art of numbers in a serene environment.</p>
+
+            <div class="mode-selection">
+                <h3>Select Grid Size</h3>
+                <div class="mode-options">
+                    <button class="mode-opt" data-size="3">3 x 3 <span>Junior</span></button>
+                    <button class="mode-opt selected" data-size="9">9 x 9 <span>Classic</span></button>
+                </div>
+            </div>
+
+            <button id="main-start-btn" class="primary-btn pulse">Start Game</button>
+        </div>
+    </div>
+
+    <div class="app-container" id="game-page" style="display: none;">
+        <header>
+            <h1>ZEN<span>SUDOKU</span></h1>
+            <div class="game-stats">
+                <div class="stat-item">
+                    <span class="label">Difficulty:</span>
+                    <span id="difficulty-display" class="value">Medium</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Time:</span>
+                    <span id="timer" class="value">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="sudoku-grid" class="sudoku-grid">
+                <!-- Cells will be generated here -->
+            </div>
+
+            <div class="game-controls">
+                <div class="control-tabs">
+                    <button class="tab-btn active" data-mode="play">Numbers</button>
+                    <button class="tab-btn" data-mode="notes">Notes</button>
+                </div>
+
+                <div id="number-pad" class="number-pad">
+                    <button class="num-btn" data-value="1">1</button>
+                    <button class="num-btn" data-value="2">2</button>
+                    <button class="num-btn" data-value="3">3</button>
+                    <button class="num-btn" data-value="4">4</button>
+                    <button class="num-btn" data-value="5">5</button>
+                    <button class="num-btn" data-value="6">6</button>
+                    <button class="num-btn" data-value="7">7</button>
+                    <button class="num-btn" data-value="8">8</button>
+                    <button class="num-btn" data-value="9">9</button>
+                    <button class="num-btn action-btn" id="delete-btn" data-value="0">
+                        <i data-lucide="delete"></i>
+                    </button>
+                </div>
+
+                <div class="action-bar">
+                    <button class="action-item" id="undo-btn" title="Undo">
+                        <i data-lucide="undo-2"></i>
+                        <span>Undo</span>
+                    </button>
+                    <button class="action-item" id="hint-btn" title="Hint">
+                        <i data-lucide="lightbulb"></i>
+                        <span>Hint</span>
+                    </button>
+                    <button class="action-item" id="solve-btn" title="Auto Solve">
+                        <i data-lucide="sparkles"></i>
+                        <span>Solve</span>
+                    </button>
+                    <button class="action-item highlight" id="new-game-btn">
+                        <span>New Game</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <div id="difficulty-modal" class="modal">
+            <div class="modal-content">
+                <h2>Choose Difficulty</h2>
+                <div class="difficulty-options">
+                    <button class="diff-opt" data-diff="easy">Easy</button>
+                    <button class="diff-opt selected" data-diff="medium">Medium</button>
+                    <button class="diff-opt" data-diff="hard">Hard</button>
+                </div>
+                <button id="start-game-btn" class="primary-btn">Start Playing</button>
+            </div>
+        </div>
+
+        <div id="victory-modal" class="modal">
+            <div class="modal-content">
+                <div class="victory-icon">🏆</div>
+                <h2>Brilliant Work!</h2>
+                <p>You've mastered this puzzle.</p>
+                <div class="final-stats">
+                    <div class="f-stat">Time: <span id="final-time">00:00</span></div>
+                </div>
+                <button id="play-again-btn" class="primary-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="sudoku-logic.js"></script>
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
